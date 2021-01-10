@@ -1,5 +1,7 @@
 # LightBlue
 
+This is the code repository for our USENIX'21 paper ([LIGHTBLUE : Automatic Profile-Aware Debloating of Bluetooth Stacks](http://a_link)).
+
 ## 0. Directory Explanation
 
 The *llvmpass* folder contains the code for our LLVM pass.
@@ -366,4 +368,4 @@ We take A2DP as an example.
   $ sh pixel_change_lib.sh a2dp.so
 ```
 
-## Firmware Debloating
+## 2. Firmware Debloating
