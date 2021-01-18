@@ -277,11 +277,27 @@ struct BTanalysis : public ModulePass {
             M.getFunction("btif_hf_client_get_interface"));
         profile_int_rm_list.push_back(M.getFunction("btif_pan_get_interface"));
 
-        // a2dp
-        constPropergate(M.getFunction("btif_av_init"), depth);
-        // sdp
+        // a2dp interfaces
+        depth = 0;
+        constPropergate(M.getFunction("init_src"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("src_connect_sink"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("disconnect"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("init_sink"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("sink_connect_src"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("disconnect"), depth);
+
+        // sdp interfaces
         depth = 0;
         constPropergate(M.getFunction("init.1653"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("deinit"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("search"), depth);
 
         removeCallInst(M.getFunction("btif_pan_init"),
                        M.getFunction("BTA_PanEnable"));
@@ -304,9 +320,17 @@ struct BTanalysis : public ModulePass {
         // hfp
         depth = 0;
         constPropergate(M.getFunction("init.868"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("connect"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("disconnect.869"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("init.1653"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("deinit"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("search"), depth);
 
         removeCallInst(M.getFunction("btif_pan_init"),
                        M.getFunction("BTA_PanEnable"));
@@ -328,9 +352,20 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(
             M.getFunction("btif_rc_ctrl_get_interface"));
 
+        // pan
+        depth = 0;
+        constPropergate(M.getFunction("btpan_enable"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("btpan_connect"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("btpan_disconnect"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("init.1653"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("deinit"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("search"), depth);
 
         break;
       case HID:
@@ -348,12 +383,20 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(
             M.getFunction("btif_rc_ctrl_get_interface"));
 
-        // hfp
+        // hid
         depth = 0;
         constPropergate(M.getFunction("init.1084"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("connect.1085"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("disconnect.1086"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("init.1653"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("deinit"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("search"), depth);
 
         removeCallInst(M.getFunction("btif_pan_init"),
                        M.getFunction("BTA_PanEnable"));
@@ -375,9 +418,20 @@ struct BTanalysis : public ModulePass {
             M.getFunction("btif_rc_ctrl_get_interface"));
         profile_int_rm_list.push_back(M.getFunction("btif_hh_get_interface"));
 
+        // hdp
+        depth = 0;
+        constPropergate(M.getFunction("init.1255"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("connect_channel"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("destroy_channel"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("init.1653"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("deinit"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("search"), depth);
 
         removeCallInst(M.getFunction("btif_pan_init"),
                        M.getFunction("BTA_PanEnable"));
@@ -399,9 +453,18 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(M.getFunction("btif_hh_get_interface"));
         profile_int_rm_list.push_back(M.getFunction("btif_hl_get_interface"));
 
+        // gatt
+        depth = 0;
+        constPropergate(M.getFunction("btif_gatt_init"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("btif_gatt_cleanup"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("init.1653"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("deinit"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("search"), depth);
 
         removeCallInst(M.getFunction("btif_pan_init"),
                        M.getFunction("BTA_PanEnable"));
@@ -438,10 +501,19 @@ struct BTanalysis : public ModulePass {
         depth = 0;
         constPropergate(name_function_map["BtifAvSource::Init"], depth);
         depth = 0;
+        constPropergate(name_function_map["BtifAvSource::Cleanup"], depth);
+        depth = 0;
         constPropergate(name_function_map["BtifAvSink::Init"], depth);
+        depth = 0;
+        constPropergate(name_function_map["BtifAvSink::Cleanup"], depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("_ZL4initP17btsdp_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL6deinitv"), depth);
+        depth = 0;
+        constPropergate(
+            M.getFunction("_ZL6searchP10RawAddressRKN9bluetooth4UuidE"), depth);
 
         removeCallInst(name_function_map["btif_pan_init"],
                        name_function_map["BTA_PanEnable"]);
@@ -477,11 +549,24 @@ struct BTanalysis : public ModulePass {
         constPropergate(
             name_function_map["bluetooth::headset::HeadsetInterface::Init"],
             depth);
+        depth = 0;
+        constPropergate(
+            name_function_map["bluetooth::headset::HeadsetInterface::Connect"],
+            depth);
+        depth = 0;
+        constPropergate(
+            name_function_map
+                ["bluetooth::headset::HeadsetInterface::Disconnect"],
+            depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("_ZL4initP17btsdp_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL6deinitv"), depth);
+        depth = 0;
+        constPropergate(
+            M.getFunction("_ZL6searchP10RawAddressRKN9bluetooth4UuidE"), depth);
 
-        // hack
         removeCallInst(name_function_map["btif_pan_init"],
                        name_function_map["BTA_PanEnable"]);
         removeCallInst(name_function_map["btif_pan_init"],
@@ -511,9 +596,20 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(
             name_function_map["btif_gatt_get_interface"]);
 
+        // pan
+        depth = 0;
+        constPropergate(M.getFunction("btpan_enable"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("btpan_connect"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("btpan_disconnect"), depth);
         // sdp
         depth = 0;
-        constPropergate(M.getFunction("_ZL4initP17btsdp_callbacks_t"), depth);
+        constPropergate(M.getFunction("init.1653"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("deinit"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("search"), depth);
         break;
       case HID:
         profile_int_rm_list.push_back(
@@ -537,16 +633,30 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(
             name_function_map["btif_gatt_get_interface"]);
 
+        // hid
         depth = 0;
         constPropergate(M.getFunction("_ZL4initP16bthh_callbacks_t"), depth);
         depth = 0;
+        constPropergate(M.getFunction("_ZL7connectP10RawAddress.4114"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL10disconnectP10RawAddress"), depth);
+
+        depth = 0;
         constPropergate(M.getFunction("_ZL4initP16bthd_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL7connectP10RawAddress"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL10disconnectv"), depth);
 
         // sdp
         depth = 0;
         constPropergate(M.getFunction("_ZL4initP17btsdp_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL6deinitv"), depth);
+        depth = 0;
+        constPropergate(
+            M.getFunction("_ZL6searchP10RawAddressRKN9bluetooth4UuidE"), depth);
 
-        // hack
         removeCallInst(name_function_map["btif_pan_init"],
                        name_function_map["BTA_PanEnable"]);
         removeCallInst(name_function_map["btif_pan_init"],
@@ -576,11 +686,22 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(
             name_function_map["btif_gatt_get_interface"]);
 
+        // hdp
+        depth = 0;
+        constPropergate(M.getFunction("_ZL4initP16bthl_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL15connect_channeliP10RawAddressiPi"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL15destroy_channeli"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("_ZL4initP17btsdp_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL6deinitv"), depth);
+        depth = 0;
+        constPropergate(
+            M.getFunction("_ZL6searchP10RawAddressRKN9bluetooth4UuidE"), depth);
 
-        // hack
         removeCallInst(name_function_map["btif_pan_init"],
                        name_function_map["BTA_PanEnable"]);
         removeCallInst(name_function_map["btif_pan_init"],
@@ -610,11 +731,18 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(
             name_function_map["btif_gatt_get_interface"]);
 
+        // map
+        depth = 0;
+        constPropergate(M.getFunction("_ZL4initP17btmce_callbacks_t"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("_ZL4initP17btsdp_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL6deinitv"), depth);
+        depth = 0;
+        constPropergate(
+            M.getFunction("_ZL6searchP10RawAddressRKN9bluetooth4UuidE"), depth);
 
-        // hack
         removeCallInst(name_function_map["btif_pan_init"],
                        name_function_map["BTA_PanEnable"]);
         removeCallInst(name_function_map["btif_pan_init"],
@@ -644,11 +772,20 @@ struct BTanalysis : public ModulePass {
         profile_int_rm_list.push_back(
             name_function_map["btif_hearing_aid_get_interface"]);
 
+        // gatt
+        depth = 0;
+        constPropergate(M.getFunction("_ZL14btif_gatt_initPK18btgatt_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL17btif_gatt_cleanupv"), depth);
         // sdp
         depth = 0;
         constPropergate(M.getFunction("_ZL4initP17btsdp_callbacks_t"), depth);
+        depth = 0;
+        constPropergate(M.getFunction("_ZL6deinitv"), depth);
+        depth = 0;
+        constPropergate(
+            M.getFunction("_ZL6searchP10RawAddressRKN9bluetooth4UuidE"), depth);
 
-        // hack
         removeCallInst(name_function_map["btif_pan_init"],
                        name_function_map["BTA_PanEnable"]);
         removeCallInst(name_function_map["btif_pan_init"],
