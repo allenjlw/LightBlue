@@ -826,7 +826,7 @@ struct BTanalysis : public ModulePass {
       for (auto I = B.begin(); I != B.end(); ++I) {
         if (auto *ci = dyn_cast<CallInst>(I)) {
           if (auto *removed = dyn_cast<Function>(
-                  ci->getCalledValue()->stripPointerCasts())) {
+                  ci->getCalledOperand()->stripPointerCasts())) {
             if (removed == callee) {
               i = ci;
             }
@@ -1708,7 +1708,7 @@ struct BTanalysis : public ModulePass {
   }
 
   bool initCallConstant(CallInst *ci) {
-    for (auto &arg : ci->arg_operands()) {
+    for (auto &arg : ci->args()) {
       if (!isa<ConstantInt>(arg)) {
         return false;
       }
@@ -1828,13 +1828,13 @@ struct BTanalysis : public ModulePass {
     for (auto &B : *F) {
       for (auto &I : B) {
         if (auto ci = dyn_cast<CallInst>(&I)) {
-          if (ci->getNumArgOperands() != 0 &&
+          if (ci->arg_size() != 0 &&
               ci->getCalledFunction() != nullptr) {
             Function *callee = ci->getCalledFunction();
             for (auto &BB : *callee) {
               for (auto &II : BB) {
                 if (auto cali = dyn_cast<CallInst>(&II)) {
-                  for (auto &a : cali->arg_operands()) {
+                  for (auto &a : cali->args()) {
                     if (isa<Argument>(&a)) {
                       return true;
                     }
@@ -1907,19 +1907,19 @@ struct BTanalysis : public ModulePass {
               // hack to bypass dead loop
               !f->getName().startswith("controller_get_interface")) {
             // no argument
-            if (ci->getNumArgOperands() == 0) {
+            if (ci->arg_size() == 0) {
               constPropergate(f, depth);
             }
             // function pointer in argument, register callbacks
             else if (funcPtrInCall(ci)) {
               if (auto callback = dyn_cast<Function>(ci->getOperand(0))) {
-                copyCallbackArgs(ci->arg_operands(), f, callback);
+                copyCallbackArgs(ci->args(), f, callback);
                 constPropergate(callback, depth);
               }
             }
             // call with arguments, but no function pointers
             else {
-              copyConstArgs(ci->arg_operands(), ci->getCalledFunction());
+              copyConstArgs(ci->args(), ci->getCalledFunction());
               constPropergate(f, depth);
             }
           }

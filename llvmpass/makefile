@@ -7,13 +7,14 @@ OBJ = $(SRC:.cpp=.o)
 LIB_OUT = BTanalysis
 
 # LLVM paths. Note: you probably need to update these.
-LLVM_DIR = /home/wu/tools-bin/llvm-tools
+LLVM_DIR_INC1 = /usr/include/llvm-14/
+LLVM_DIR_INC2 = /usr/include/llvm-c-14/
 
 # Compiler flags.
-CXXFLAGS  = -I$(LLVM_DIR)/include -I.
+CXXFLAGS  = -I$(LLVM_DIR_INC1) -I$(LLVM_DIR_INC2) -I.
 CXXFLAGS += -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -Wno-long-long
 CXXFLAGS += -fPIC -fvisibility-inlines-hidden
-CXXFLAGS += -fno-exceptions -fno-rtti -std=c++11
+CXXFLAGS += -fno-exceptions -fno-rtti -std=c++14
 CXXFLAGS += -Wall -g
 
 # Linker flags.
